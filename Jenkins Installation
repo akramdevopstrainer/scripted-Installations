@@ -1,0 +1,52 @@
+This script will automate the installation of Jenkins on your Amazon Linux instance and also display the initial admin password for you to complete the Jenkins setup.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#!/bin/bash
+
+# Step 1: Install Java OpenJDK 11
+sudo amazon-linux-extras install java-openjdk11 -y
+
+# Step 2: Confirm Java installation
+java -version
+
+# Step 3: Install EPEL repository
+sudo amazon-linux-extras install epel -y
+
+# Step 4: Add Jenkins repository
+curl --silent --location http://pkg.jenkins.io/redhat-stable/jenkins.repo | sudo tee /etc/yum.repos.d/jenkins.repo
+
+# Step 5: Change to Jenkins repository directory
+cd /etc/yum.repos.d/
+
+# Step 6: List repository contents
+ls -l
+
+# Step 7: Import Jenkins repository key
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+
+# Step 8: Install Jenkins
+sudo yum install jenkins -y
+
+# Step 9: Check Jenkins status
+systemctl status jenkins
+
+# Step 10: Start Jenkins service
+sudo systemctl start jenkins
+
+# Step 11: Check Jenkins status
+systemctl status jenkins
+
+# Step 12: Enable Jenkins service to start on boot
+sudo systemctl enable jenkins
+
+# Step 13: Get Jenkins initial admin password
+cat /var/lib/jenkins/secrets/initialAdminPassword
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+# Make the script executable with the following command:
+chmod +x install_jenkins.sh
+
+# To run the script, execute it using sudo:
+sudo ./install_jenkins.sh
