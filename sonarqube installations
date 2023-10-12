@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# Step 3: Install Java OpenJDK 11
+sudo amazon-linux-extras install java-openjdk11 -y
+
+# Step 4: Verify the Java version
+java -version
+
+# Step 5: Change to the /opt/ directory
+cd /opt/
+
+# Step 6: Download the SonarQube distribution
+wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.10.61524.zip
+
+# Step 7: Unzip the downloaded file
+unzip sonarqube-8.9.10.61524.zip
+
+# Step 8: Rename the extracted folder to 'sonar'
+mv sonarqube-8.9.10.61524 sonar
+
+# Step 9: Create a new user for SonarQube
+useradd sonar
+
+# Step 10: Verify the user 'sonar'
+id sonar
+
+# Step 11: Change ownership of the SonarQube installation directory
+chown -R sonar:sonar sonar
+
+# Step 12: Create a systemd service file for SonarQube
+cat <<EOL | sudo tee /etc/systemd/system/sonar.service
+[Unit]
+Description=sonar 8.9.10 service
+After=network.target
+
+[Service]
+Type=forking
+LimitNOFILE=65536
+User=sonar
+Group=sonar
+ExecStart=/opt/sonar/bin/linux-x86-64/sonar.sh start
+ExecStop=/opt/sonar/bin/linux-x86-64/sonar.sh stop
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOL
+
+# Step 13: Set permissions for the SonarQube service file
+sudo chmod 644 /etc/systemd/system/sonar.service
+
+# Step 14: Enable the SonarQube service to start on boot
+sudo systemctl enable sonar.service
+
+# Step 15: Start the SonarQube service
+sudo systemctl start sonar.service
+
+# Step 16: Check the status of the SonarQube service
+systemctl status sonar.service
+
+# Step 18: Fetch the public IP address of the EC2 instance
+curl http://169.254.169.254/latest/meta-data/public-ipv4
+
+++++ ++++ ++++ ++++ ++++ ++++ ++++ ++++ ++++ ++++++++ ++++ ++++ ++++ ++++++++ ++++ ++++ ++++ ++++++++ ++++ ++++ ++++ ++++++++ ++++ ++++ ++++ ++++++++ ++++ ++++ ++++ ++++
+
+
+Make the script executable with the following command:
+chmod +x deploy_sonarqube.sh
+
+To run the script, execute it using sudo:
+sudo ./deploy_sonarqube.sh
+
+This script will automate the deployment of SonarQube on your Amazon EC2 instance as per the provided steps.
