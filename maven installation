@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# Step 1: Install Java Development Kit (JDK)
+sudo yum install java-1.8.0-openjdk-devel -y
+
+# Step 2: Check Java version
+java -version
+
+# Step 3: Navigate to the /opt/ directory
+cd /opt/
+
+# Step 4: Print the current working directory (Optional)
+pwd
+
+# Step 5: Download Apache Maven
+wget https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.zip
+
+# Step 6: List contents of the directory (Optional)
+ls -ltr
+
+# Step 7: Extract Maven ZIP archive
+unzip apache-maven-3.8.8-bin.zip
+
+# Step 8: List contents of the directory after extraction
+ls -ltr
+
+# Step 9: Rename the extracted directory to "maven"
+mv apache-maven-3.8.8 maven
+
+# Step 10: List contents of the directory after renaming
+ls -ltr
+
+# Step 11: Change directory to the "maven" directory
+cd maven/
+
+# Step 12: List contents of the "maven" directory (Optional)
+ls -ltr
+
+# Step 13: Navigate to the /etc/profile.d/ directory
+cd /etc/profile.d/
+
+# Step 14: Create a new shell script named "maven.sh" using the echo command
+echo 'export M2_HOME=/opt/maven' | sudo tee -a maven.sh
+echo 'export PATH=${M2_HOME}/bin:${PATH}' | sudo tee -a maven.sh
+
+# Step 15: List contents of the directory after creating the script (Optional)
+ls -ltr
+
+# Step 16: Change permissions of the "maven.sh" script to make it executable (Not recommended in a production environment)
+sudo chmod 644 maven.sh
+
+# Step 17: List contents of the directory after changing permissions (Optional)
+ls -ltr
+
+# Step 18: Source the "maven.sh" script to set up Maven environment variables
+source /etc/profile.d/maven.sh
+
+# Step 19: Check the Maven version
+mvn --version
+
+
+========================================================================================================================================
+
+# Make the script executable with the following command:
+chmod +x maven.sh
+
+# To run the script, execute it using sudo:
+sudo ./maven.sh
